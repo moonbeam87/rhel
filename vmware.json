@@ -1,0 +1,55 @@
+{
+    "variables": {
+        "vsphere-server": "iWorksVCenter1.hq.iworkscorp.com",
+        "vsphere-user": "dpatel@IWORKSVCDOMAIN.local",
+        "vsphere-password": "Cde3$rfv!23",
+        "vsphere-datacenter": "K8S-Environment",
+        "vsphere-cluster": "kubernetes-DevOps",
+        "vsphere-network": "demo-app",
+        "vsphere-datastore": "RHELDataStore",
+        "vm-name": "rh7frompacker",
+        "vm-cpu-num": "1",
+        "vm-mem-size": "1024",
+        "vm-disk-size": "25600",
+        "iso": "rhel-server-7.9-x86_64-dvd.iso",
+        "checksum": "7E40E30E794CA80FCD840AA1A54876B0"
+    },
+    "builders": [
+      {
+        "type": "vsphere-iso",
+        "iso_url": "{{ user `iso` }}",
+        "iso_checksum": "md5:{{ user `checksum` }}",
+        "vcenter_server": "{{user `vsphere-server`}}",
+        "username": "{{user `vsphere-user`}}",
+        "password": "{{user `vsphere-password`}}",
+        "insecure_connection": "true",
+
+        "datacenter": "{{user `vsphere-datacenter`}}",
+        "cluster": "{{user `vsphere-cluster`}}",
+        "network": "{{user `vsphere-network`}}",
+        "datastore": "{{user `vsphere-datastore`}}",
+
+        "vm_name": "{{user `vm-name`}}",
+        "notes": "Build via Packer",
+        "guest_os_type": "RedHat_64",
+        "ssh_username": "iwzadmin",
+        "ssh_password": "G3umpyD3cks123",
+        "ssh_port": 22,
+        "ssh_wait_timeout": "1h",
+        "CPUs": "{{user `vm-cpu-num`}}",
+        "RAM": "{{user `vm-mem-size`}}",
+        "RAM_reserve_all": false,
+        "disk_controller_type": "pvscsi",
+        "disk_size": "{{user `vm-disk-size`}}",
+        "disk_thin_provisioned": true,
+        "network_card": "vmxnet3",
+        "http_directory": "http",
+        "convert_to_template": true,
+        "floppy_files": ["ks.cfg"],
+        "boot_command": [
+            "<esc><wait>",
+            "linux ks=hd:fd0:/ks.cfg<enter>"
+        ]
+      }
+    ]
+  }
